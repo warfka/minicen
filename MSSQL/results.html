@@ -1,0 +1,104 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Запросы и результаты выполнения</title>
+<style>body{font:16px/1.55 Arial,sans-serif;color:#202124;max-width:1120px;margin:40px auto;padding:0 24px}h1{font-size:30px}h2{margin-top:48px;font-size:23px}pre{background:#f4f6f8;padding:20px;overflow:auto;font:14px/1.5 Consolas,monospace}table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid #ccd2da;padding:9px 12px;text-align:left}th{background:#eaf0f7}tbody tr:nth-child(even){background:#f8fafc}.table-wrap{overflow-x:auto}nav a{margin-right:18px}p{max-width:1000px}</style></head><body>
+<h1>Запросы и результаты выполнения</h1><p>Все пять SELECT-запросов выполнены на Microsoft SQL Server 2025 Express 17.0.1000.7 в локальном экземпляре .\SQLEXPRESS, база PharmDB. Проверено 13 ноября 2026 года. Все столбцы и строки фактических результатов совпали с приведенными ниже таблицами.</p>
+<nav><a href="#query1">1</a> <a href="#query2">2</a> <a href="#query3">3</a> <a href="#query4">4</a> <a href="#query5">5</a></nav>
+<section id="query1"><h2>1. Все кассы</h2>
+<pre><code>SELECT
+    d.[name] AS [Аптека],
+    c.[name] + ISNULL(N&#x27;, &#x27; + d.[address], N&#x27;&#x27;) AS [Адрес аптеки с городом],
+    k.[number] AS [Номер кассы],
+    k.[description] AS [Описание кассы]
+FROM dbo.cashdesk AS k
+INNER JOIN dbo.drugstores AS d ON d.[id] = k.[drugstore_id]
+INNER JOIN dbo.cities AS c ON c.[id] = d.[city_id]
+ORDER BY d.[name], k.[number], k.[description], k.[id];</code></pre>
+<p>21 строк</p>
+<div class="table-wrap"><table><thead><tr><th>Аптека</th><th>Адрес аптеки с городом</th><th>Номер кассы</th><th>Описание кассы</th></tr></thead><tbody>
+<tr><td>Аптека №1</td><td>Хабаровск, ул. Карла Маркса, 1</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №1</td><td>Хабаровск, ул. Карла Маркса, 1</td><td>2</td><td>касса 2</td></tr>
+<tr><td>Аптека №1</td><td>Хабаровск, ул. Карла Маркса, 1</td><td>3</td><td>рецептура 1</td></tr>
+<tr><td>Аптека №2</td><td>Хабаровск, ул. Ленина, 2</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №2</td><td>Хабаровск, ул. Ленина, 2</td><td>2</td><td>касса 2</td></tr>
+<tr><td>Аптека №2</td><td>Хабаровск, ул. Ленина, 2</td><td>3</td><td>касса 3</td></tr>
+<tr><td>Аптека №3</td><td>Хабаровск, пр. Победы, 3</td><td>1</td><td>рецептура 1</td></tr>
+<tr><td>Аптека №4</td><td>Хабаровск, ул. Карла Маркса, 15</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №4</td><td>Хабаровск, ул. Карла Маркса, 15</td><td>2</td><td>касса 2</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток, ул. Комсомольская, 5</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток, ул. Комсомольская, 5</td><td>2</td><td>касса 2</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток, ул. Комсомольская, 5</td><td>3</td><td>рецептура 1</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток, ул. Комсомольская, 5</td><td>4</td><td>рецептура 2</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток, ул. Комсомольская, 5</td><td>5</td><td>рецептура 3</td></tr>
+<tr><td>Аптека №6</td><td>Владивосток, ул. Большая, 6</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>1</td><td>касса 1</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>2</td><td>касса 1</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>2</td><td>касса 2</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>3</td><td>касса 2</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>4</td><td>касса 1</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск, ул. Ленина, 22</td><td>5</td><td>касса 2</td></tr>
+</tbody></table></div></section>
+<section id="query2"><h2>2. Аптеки, в которых больше трех касс</h2>
+<pre><code>SELECT
+    d.[name] AS [Аптека],
+    c.[name] AS [Город],
+    d.[address] AS [Адрес аптеки]
+FROM dbo.drugstores AS d
+INNER JOIN dbo.cities AS c ON c.[id] = d.[city_id]
+INNER JOIN dbo.cashdesk AS k ON k.[drugstore_id] = d.[id]
+GROUP BY d.[id], d.[name], c.[name], d.[address]
+HAVING COUNT(k.[id]) &gt; 3
+ORDER BY d.[name], d.[id];</code></pre>
+<p>2 строк</p>
+<div class="table-wrap"><table><thead><tr><th>Аптека</th><th>Город</th><th>Адрес аптеки</th></tr></thead><tbody>
+<tr><td>Аптека №5</td><td>Владивосток</td><td>ул. Комсомольская, 5</td></tr>
+<tr><td>Аптека №7</td><td>Благовещенск</td><td>ул. Ленина, 22</td></tr>
+</tbody></table></div></section>
+<section id="query3"><h2>3. Аптеки на улице Карла Маркса</h2>
+<pre><code>SELECT
+    d.[name] AS [Аптека],
+    c.[name] AS [Город],
+    d.[address] AS [Адрес аптеки],
+    COUNT(k.[id]) AS [Кол-во касс]
+FROM dbo.drugstores AS d
+INNER JOIN dbo.cities AS c ON c.[id] = d.[city_id]
+LEFT JOIN dbo.cashdesk AS k ON k.[drugstore_id] = d.[id]
+WHERE d.[address] LIKE N&#x27;%Карла Маркса%&#x27;
+GROUP BY d.[id], d.[name], c.[name], d.[address]
+ORDER BY d.[name], d.[id];</code></pre>
+<p>2 строк</p>
+<div class="table-wrap"><table><thead><tr><th>Аптека</th><th>Город</th><th>Адрес аптеки</th><th>Кол-во касс</th></tr></thead><tbody>
+<tr><td>Аптека №1</td><td>Хабаровск</td><td>ул. Карла Маркса, 1</td><td>3</td></tr>
+<tr><td>Аптека №4</td><td>Хабаровск</td><td>ул. Карла Маркса, 15</td><td>2</td></tr>
+</tbody></table></div></section>
+<section id="query4"><h2>4. Аптеки с рецептурными кассами</h2>
+<pre><code>SELECT
+    d.[name] AS [Аптека],
+    c.[name] AS [Город],
+    d.[address] AS [Адрес аптеки],
+    COUNT(k.[id]) AS [Кол-во касс с рецептурой]
+FROM dbo.drugstores AS d
+INNER JOIN dbo.cities AS c ON c.[id] = d.[city_id]
+INNER JOIN dbo.cashdesk AS k ON k.[drugstore_id] = d.[id]
+WHERE k.[description] LIKE N&#x27;%рецептура%&#x27;
+GROUP BY d.[id], d.[name], c.[name], d.[address]
+ORDER BY d.[name], d.[id];</code></pre>
+<p>3 строк</p>
+<div class="table-wrap"><table><thead><tr><th>Аптека</th><th>Город</th><th>Адрес аптеки</th><th>Кол-во касс с рецептурой</th></tr></thead><tbody>
+<tr><td>Аптека №1</td><td>Хабаровск</td><td>ул. Карла Маркса, 1</td><td>1</td></tr>
+<tr><td>Аптека №3</td><td>Хабаровск</td><td>пр. Победы, 3</td><td>1</td></tr>
+<tr><td>Аптека №5</td><td>Владивосток</td><td>ул. Комсомольская, 5</td><td>3</td></tr>
+</tbody></table></div></section>
+<section id="query5"><h2>5. Города, в которых больше восьми касс</h2>
+<pre><code>SELECT
+    c.[name] AS [Город]
+FROM dbo.cities AS c
+INNER JOIN dbo.drugstores AS d ON d.[city_id] = c.[id]
+INNER JOIN dbo.cashdesk AS k ON k.[drugstore_id] = d.[id]
+GROUP BY c.[id], c.[name]
+HAVING COUNT(k.[id]) &gt; 8
+ORDER BY c.[name], c.[id];</code></pre>
+<p>1 строк</p>
+<div class="table-wrap"><table><thead><tr><th>Город</th></tr></thead><tbody>
+<tr><td>Хабаровск</td></tr>
+</tbody></table></div></section>
+</body></html>
